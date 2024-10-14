@@ -8,14 +8,15 @@ import (
 	"github.com/mileusna/useragent"
 )
 
-func Device(h http.Handler) http.Handler {
-	type osContextKey string
-	k := osContextKey("os")
+type osContextKey string
 
+const osKey = osContextKey("os")
+
+func Device(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		ua := useragent.Parse(r.UserAgent())
-		ctx := context.WithValue(r.Context(), k, ua.OS)
-		log.Println(ctx.Value(k))
+		ctx := context.WithValue(r.Context(), osKey, ua.OS)
+		log.Println(ctx.Value(osKey))
 		h.ServeHTTP(w, r.WithContext(ctx))
 	}
 
