@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/mileusna/useragent"
@@ -16,7 +15,6 @@ func Device(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		ua := useragent.Parse(r.UserAgent())
 		ctx := context.WithValue(r.Context(), osKey, ua.OS)
-		log.Println(ctx.Value(osKey))
 		h.ServeHTTP(w, r.WithContext(ctx))
 	}
 
