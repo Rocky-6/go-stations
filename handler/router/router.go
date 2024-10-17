@@ -12,8 +12,8 @@ import (
 func NewRouter(todoDB *sql.DB) *http.ServeMux {
 	// register routes
 	mux := http.NewServeMux()
-	mux.Handle("/healthz", middleware.Device(handler.NewHealthzHandler()))
-	mux.Handle("/todos", handler.NewTODOHandler(service.NewTODOService(todoDB)))
+	mux.Handle("/healthz", middleware.Recovery(middleware.Device(middleware.Logging(handler.NewHealthzHandler()))))
+	mux.Handle("/todos", middleware.Recovery(middleware.Device(middleware.Logging(handler.NewTODOHandler(service.NewTODOService(todoDB))))))
 	mux.Handle("/do-panic", middleware.Recovery(handler.NewDoPanicHandler()))
 	return mux
 }
