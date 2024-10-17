@@ -39,6 +39,8 @@ func Logging(h http.Handler) http.Handler {
 		jsonData, err := json.Marshal(accessLog)
 		if err != nil {
 			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 		fmt.Printf("%s\n", jsonData)
 	}
