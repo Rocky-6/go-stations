@@ -19,7 +19,8 @@ func Logging(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		h.ServeHTTP(w, r)
-		finish := time.Now()
+
+		latency := time.Since(start).Microseconds()
 
 		urlPath := r.URL.Path
 
@@ -30,7 +31,7 @@ func Logging(h http.Handler) http.Handler {
 
 		accessLog := &AccessLog{
 			TimeStamp: start,
-			Latency:   finish.Unix() - start.Unix(),
+			Latency:   latency,
 			Path:      urlPath,
 			OS:        osValue,
 		}
@@ -38,6 +39,8 @@ func Logging(h http.Handler) http.Handler {
 		jsonData, err := json.Marshal(accessLog)
 		if err != nil {
 			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 		fmt.Printf("%s\n", jsonData)
 	}
