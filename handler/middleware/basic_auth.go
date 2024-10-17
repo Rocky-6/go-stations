@@ -10,8 +10,9 @@ func BasicAuth(h http.Handler) http.Handler {
 	Password := os.Getenv("BASIC_AUTH_PASSWORD")
 
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		userID, password, _ := r.BasicAuth()
-		if userID != UserID || password != Password {
+		userID, password, ok := r.BasicAuth()
+		if !ok || userID != UserID || password != Password {
+			w.Header().Set("WWW-Authenticate", `Basic realm="auth area"`)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
