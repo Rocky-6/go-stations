@@ -12,7 +12,7 @@ func BasicAuth(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		userID, password, _ := r.BasicAuth()
 		if userID != UserID || password != Password {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		h.ServeHTTP(w, r)
