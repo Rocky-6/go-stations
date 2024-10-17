@@ -27,6 +27,8 @@ func Logging(h http.Handler) http.Handler {
 		osValue, ok := r.Context().Value(osKey).(string)
 		if !ok {
 			log.Println(osValue)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 
 		accessLog := &AccessLog{
