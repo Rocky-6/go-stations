@@ -13,6 +13,7 @@ func Recovery(h http.Handler) http.Handler {
 				w.WriteHeader(http.StatusInternalServerError)
 			}
 		}()
+		//time.Sleep(5 * time.Second)
 		h.ServeHTTP(w, r)
 	}
 
